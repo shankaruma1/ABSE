@@ -9,23 +9,30 @@ def main():
     cpabe = TLABKS01(pairing_group, 2)
 
     # initiates setup algorithm
-    (pk, msk) = cpabe.setup()
+    (pp, msk) = cpabe.setup()
 
     # generate a key
     attr_list = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX']
-    key = cpabe.keygen(pk, msk, attr_list)
+    uid = random.random()
+    sk = cpabe.keygen(pp, msk, uid, attr_list)
 
     # choose a random message
-    msg = pairing_group.random(GT)
+    f = pairing_group.random(GT)
 
-    # generate a ciphertext
-    policy_str = '((ONE and THREE) and (TWO OR FOUR))'
-    ctxt = cpabe.encrypt(pk, msg, policy_str)
+    # generate a  intermediate ciphertext
+    policy_str = '((ONE and THREE) and (TWO OR FOUR) OR (FIVE and SIX))'
+    ict = cpabe.do_enc(pp, f, policy_str)
 
-    # decryption
-    rec_msg = cpabe.decrypt(pk, ctxt, key)
+    # generate full ciphertext
+    ct = cpabe.edge_enc(pp, ict)
+
+    # partial decryption at edge node
+    t = cpabe.edge_dec(sk,ict)
+
+    # full decryption
+    f1 = cpabe.du_dec(t,sk)
     if debug:
-        if rec_msg == msg:
+        if f1 == f:
             print ("Successful decryption.")
         else:
             print ("Decryption failed.")
