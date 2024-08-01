@@ -134,7 +134,20 @@ class TLABKS(ABEnc):
          T1 =pp['beta'] ** (hs * u)
       return {'T1':T1, 'T2':T2, 'T3':T3, 'T4':T4}
 
+    def search(I1, I2, I3, I4, T1, T2, T3, T4):
+        """
+         This algorithm searches between index and trapdoor
+        """
 
+        if debug:
+            print('Search algorithm:\n')
+        s1 = pair(T3, I4)
+        s2 = pair(T1, I2)
+        s1 = pair(T4, I3)
+        s1 = pair(T2, I1)
+        if (s1 * s2) == (s3 * s4):
+            return True
+    
 
     def decrypt(self, pk, ctxt, key):
         """
