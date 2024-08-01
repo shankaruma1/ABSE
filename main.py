@@ -134,7 +134,7 @@ class TLABKS(ABEnc):
          T1 =pp['beta'] ** (hs * u)
       return {'T1':T1, 'T2':T2, 'T3':T3, 'T4':T4}
 
-    def search(I1, I2, I3, I4, T1, T2, T3, T4):
+    def search(self, I1, I2, I3, I4, T1, T2, T3, T4):
         """
          This algorithm searches between index and trapdoor
         """
@@ -147,28 +147,74 @@ class TLABKS(ABEnc):
         s1 = pair(T2, I1)
         if (s1 * s2) == (s3 * s4):
             return True
-    
 
-    def decrypt(self, pk, ctxt, key):
+    def edge_dec(self, D1, D2, Di1, Di2, C1, C2, Ci2, Ci3):
         """
-         Decrypt ciphertext ctxt with key key.
+         This algorithm performs partial decryption at edge node
         """
 
         if debug:
-            print('Decryption algorithm:\n')
-
-        nodes = self.util.prune(ctxt['policy'], key['attr_list'])
-        if not nodes:
+            print('Edge decryption algorithm:\n')
+        ed = C1 ** D1
+        ed1 = ed * C2
+        abt = self.util.prune(Ci2['policy'], Di1['attr_list'])
+        if not abt:
             print ("Policy not satisfied.")
             return None
 
-        prod = 1
-
-        for node in nodes:
-            attr = node.getAttributeAndIndex()
+        for ab in abt:
+            attr = ab.getAttributeAndIndex()
             attr_stripped = self.util.strip_index(attr)
             (c_attr1, c_attr2) = ctxt['C'][attr]
             (k_attr1, k_attr2) = key['K'][attr_stripped]
-            prod *= (pair(k_attr1, c_attr1) / pair(c_attr2, k_attr2))
+            ICT = pair(D2, ed1) * pair(k_attr1, c_attr1) / pair(c_attr2, k_attr2)
+        return {'ICT':ICT}
 
-        return (ctxt['c_m'] * prod) / (pair(key['k0'], ctxt['c0']))
+    def du_dec(self, ICT, D1, D3, D4):
+        """
+         This algorithm performs full decryption
+        """
+
+        if debug:
+            print('user full decryption algorithm:\n')
+        fd = D3 ** D1
+        fd1 = fd * D4
+        wi={}
+        abs = self.util.prune(ICT['policy'])
+        if not abs:
+            print ("Policy not satisfied.")
+            return None
+
+        for i in abs:
+            attr = i.getAttributeAndIndex()
+            attr_stripped = self.util.strip_index(attr)
+            wi = self.group.random(ZR)
+            E = pair(fd1, Ci1) ** wi
+        F = (C0 * E)/T
+        return {'F':F}
+    def keysanitycheck(self, D1, D2, D3, D4, Di1, Di2):
+         """
+         This algorithm checks whether the given secret key is valid or not
+        """
+
+        if debug:
+            print('key santity check algorithm:\n')
+        ks = pp['beta'] * (g1 ** D1)
+        kse1 = pair(D2, ks)
+        sc = D3 ** D1
+        sc1 = sc * D4
+        kse2 = pair(sc1, g)
+        kse3 = pair(Di2,g)
+        kse4 = pair(pp['g_pow_ai', Di1)
+        if (kse1 = = kse2) && (kse3 = = kse4):
+            return True
+    def trace(self, D1):
+         """
+         This algorithm returns user id
+         """
+
+        if debug:
+            print('Trace algorithm:\n')
+        uid = f.decrept(x)
+        return {'uid':uid}
+        
