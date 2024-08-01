@@ -38,7 +38,7 @@ class TLABKS01(ABEnc):
         msk = {'alpha':alpha, 'beta': beta}
         end_time = datetime.now()
         print('Duration: {}'.format(end_time - start_time))
-        return pp, msk
+        return {'pp':pp, 'msk':msk}
 
     def keygen(self, pp, msk, uid, attr_list):
         start_time = datetime.now()
@@ -125,7 +125,7 @@ class TLABKS01(ABEnc):
           
         return {'ICT': ICT, 'c_i1':c_i1, 'c_i2':c_i2, 'c_i3':c_i3}
         
-    def IndexGen(self, PP, KW):
+    def indexgen(self, PP, KW):
         start_time = datetime.now()
       """
       This algorithm generates encrypted index
