@@ -6,7 +6,7 @@ from cryptography.fernet import Fernet
 debug = False
 
 
-class TLABKS(ABEnc):
+class TLABKS01(ABEnc):
 
     def __init__(self, group_obj, verbose=False):
         ABEnc.__init__(self)
