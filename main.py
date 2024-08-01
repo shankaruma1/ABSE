@@ -25,10 +25,22 @@ def main():
 
     # generate full ciphertext
     ct = cpabe.edge_enc(pp, ict)
+    kw = {k1, k2, k3, k4, k5, k6, k7, k8, k9, k10}
+    
+    #index generation
+    I = cpabe.indexgen(pp,kw)
 
+    kwprime = {k3, k5}
+    #trapdoor generation
+    T = cpabe.trapgen(sk,kwprime)
+    
+    #initiating search algorithm
+    res = None
+    res = search(I,T)
+    
     # partial decryption at edge node
     t = cpabe.edge_dec(sk,ict)
-
+    
     # full decryption
     f1 = cpabe.du_dec(t,sk)
     if debug:
@@ -36,6 +48,11 @@ def main():
             print ("Successful decryption.")
         else:
             print ("Decryption failed.")
+    #key sanity check
+    res = keysanitycheck(sk)
+
+    #trace
+    uid = trace(sk)
 
 
 if __name__ == "__main__":
