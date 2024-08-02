@@ -1,6 +1,6 @@
 from charm.toolbox.pairinggroup import PairingGroup, ZR, G1, G2, GT, pair
 from charm.toolbox.ABEnc import ABEnc
-from ..msp import MSP
+from policy import MSP
 import hashlib
 from cryptography.fernet import Fernet
 debug = False
