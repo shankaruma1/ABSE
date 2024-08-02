@@ -1,0 +1,2 @@
+charm-crypto==0.43
+python_version >= 2.7
